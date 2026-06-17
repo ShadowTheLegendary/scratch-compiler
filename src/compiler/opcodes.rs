@@ -58,8 +58,37 @@ pub enum BlockOpcode {
 
     MotionDirection,
 
+
     // Looks / Purple blocks
     // Rectangle blocks
+    LooksSayForSecs,
+    LooksSay,
+    LooksThink,
+    LooksThinkForSecs,
 
+    LooksCostume,
+    LooksSwitchCostumeTo,
+    LooksNextCostume,
+
+    LooksBackdrops,
+    LooksSwitchBackdropTo,
+    LooksNextBackdrop,
+
+    LooksChangeSizeBy,
+    LooksSetSizeTo,
+    
+    LooksChangeEffectBy,
+    LooksSetEffectTo,
+    LooksClearGraphicEffects,
+
+    LooksShow,
+    LooksHide,
+
+    LooksGoToFrontBack,
+    LooksGoForwardBackwardLayers,
+    
     // Oval blocks
+    LooksCostumeNumberName,
+    LooksBackdropNumberName,
+    LooksSize,    
 }
