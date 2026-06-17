@@ -11,7 +11,7 @@ use serde_json::Value;
 
 use crate::BUILD_DIRECTORY;
 
-pub fn download(project_id: &str) -> Result<(), Box<dyn std::error::Error>> {
+pub fn download(project_id: &str) -> Result<Value, Box<dyn std::error::Error>> {
     println!("- Fetching project.");
     println!("-- Fetching project metadata.");
 
@@ -24,7 +24,7 @@ pub fn download(project_id: &str) -> Result<(), Box<dyn std::error::Error>> {
         }
         _ => {
             println!("-- Error fetching project metadata.");
-            return Ok(());
+            return Err("Could not fetch project metadata.".to_string().into());
         }
     }
 
@@ -51,8 +51,8 @@ pub fn download(project_id: &str) -> Result<(), Box<dyn std::error::Error>> {
             println!("- Successfully fetched project.\n")
         }
         _ => {
-            println!("- Issue fetching project: {}.", response.status());
-            return Ok(());
+            println!("- Error fetching project: {}.", response.status());
+            return Err("Could not fetch project.".to_string().into());
         }
     }
 
@@ -66,19 +66,19 @@ pub fn download(project_id: &str) -> Result<(), Box<dyn std::error::Error>> {
         .to_string();
     let project_dir = BUILD_DIRECTORY.to_owned() + &project_id;
 
-    if content_type.contains("zip") || content_type.contains("sb3") {
+    let json: Value = if content_type.contains("zip") || content_type.contains("sb3") {
         let bytes = response.bytes()?;
-        handle_sb3(&project_dir, bytes)?;
+        handle_sb3(&project_dir, bytes)?
     } else {
-        handle_json(&project_dir, &response.text()?)?;
-    }
+        handle_json(&project_dir, &response.text()?)?
+    };
 
     println!("- Successfully wrote files.\n");
 
-    Ok(())
+    Ok(json)
 }
 
-fn handle_sb3(directory: &str, bytes: Bytes) -> Result<(), Box<dyn std::error::Error>> {
+fn handle_sb3(directory: &str, bytes: Bytes) -> Result<Value, Box<dyn std::error::Error>> {
     println!("-- Extracting .sb3 file.");
     let cursor = Cursor::new(bytes);
     let mut archive = ZipArchive::new(cursor)?;
@@ -99,10 +99,14 @@ fn handle_sb3(directory: &str, bytes: Bytes) -> Result<(), Box<dyn std::error::E
     }
 
     println!("-- Successfully extracted .sb3 file to {}.", directory);
-    Ok(())
+
+    let json = fs::read_to_string(directory.to_owned() + "/project.json")?;
+    let json: Value = serde_json::from_str(&json)?;
+
+    Ok(json)
 }
 
-fn handle_json(directory: &str, json: &str) -> Result<(), Box<dyn std::error::Error>> {
+fn handle_json(directory: &str, json: &str) -> Result<Value, Box<dyn std::error::Error>> {
     // https://assets.scratch.mit.edu/internalapi/asset/<MD5EXT>/get/
     // this just tries to find and download all the assets for the json
 
@@ -157,7 +161,7 @@ fn handle_json(directory: &str, json: &str) -> Result<(), Box<dyn std::error::Er
                 _ => {
                     println!("\n--- Issue fetching {}, {}.", md5ext, response.status());
                     println!("{}", link);
-                    return Ok(());
+                    return Err("Could not fetch project asset.".to_string().into());
                 }
             }
 
@@ -168,5 +172,5 @@ fn handle_json(directory: &str, json: &str) -> Result<(), Box<dyn std::error::Er
 
     println!("\n-- Successfully downloaded project assets.");
 
-    Ok(())
+    Ok(json)
 }

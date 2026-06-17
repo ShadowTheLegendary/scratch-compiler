@@ -15,8 +15,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let project_id = args[1].clone();
 
-    downloader::download(&project_id)?;
-    compiler::compile(&project_id);
+    let json = downloader::download(&project_id)?;
+    compiler::compile(&project_id, &json);
 
     Ok(())
 }

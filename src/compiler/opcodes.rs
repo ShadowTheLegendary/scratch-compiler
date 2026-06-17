@@ -1,14 +1,17 @@
-use strum::{Display, EnumString};
+use strum::EnumString;
 
-/*pub fn opcode_to_string(opcode: &Opcode) -> String {
-    opcode.to_string()
+pub fn string_to_block_opcode(string: &str) -> BlockOpcode {
+    string.parse().expect("String does not match known opcode.")
 }
 
-pub fn string_to_opcode(string: &str) -> Opcode{
-    string.parse().expect("String does not match known opcode.")
-}*/
+impl std::fmt::Display for BlockOpcode {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
 
-#[derive(Debug, Display, PartialEq, EnumString)]
+#[derive(Debug, PartialEq, EnumString)]
+#[strum(serialize_all = "lowercase")]
 pub enum MonitorOpcode {
     // Motion / Blue blocks
     MotionXPosition,
@@ -16,19 +19,17 @@ pub enum MonitorOpcode {
 
     MotionDirection,
 
-
     // Looks / Purple blocks
     LooksSize,
     LooksBackDropNumberName,
     LooksCostumeNumberName,
 
-    
     // Sound / Pink blocks
     SoundVolume,
 }
 
-
-#[derive(Debug, Display, PartialEq, EnumString)]
+#[derive(Debug, PartialEq, EnumString)]
+#[strum(serialize_all = "lowercase")]
 pub enum BlockOpcode {
     // Motion / Blue blocks
     // Rectangle blocks
@@ -44,7 +45,7 @@ pub enum BlockOpcode {
     MotionGlideTo,
     MotionGlideToMenu,
     MotionGlideSecsToXY,
-    
+
     MotionPointIndirection,
     MotionPointTowards,
     MotionPointTowardsMenu,
@@ -64,7 +65,6 @@ pub enum BlockOpcode {
 
     MotionDirection,
 
-
     // Looks / Purple blocks
     // Rectangle blocks
     LooksSayForSecs,
@@ -82,7 +82,7 @@ pub enum BlockOpcode {
 
     LooksChangeSizeBy,
     LooksSetSizeTo,
-    
+
     LooksChangeEffectBy,
     LooksSetEffectTo,
     LooksClearGraphicEffects,
@@ -92,12 +92,11 @@ pub enum BlockOpcode {
 
     LooksGoToFrontBack,
     LooksGoForwardBackwardLayers,
-    
+
     // Oval blocks
     LooksCostumeNumberName,
     LooksBackdropNumberName,
     LooksSize,
-
 
     // Sound / Pink blocks
     // Rectangle blocks
@@ -115,4 +114,17 @@ pub enum BlockOpcode {
 
     // Oval blocks
     SoundVolume,
+
+    // Events / Yellow blocks
+    // Code entrypoints
+    EventWhenFlagClicked,
+    EventWhenKeyPressed,
+    EventWhenThisSpriteClicked,
+    EventWhenBackdropSwitchesTo,
+    EventWhenGreaterThan,
+    EventWhenBroadcastReceived,
+
+    // Rectangle blocks
+    EventBroadcast,
+    EventBroadcastAndWait,
 }
