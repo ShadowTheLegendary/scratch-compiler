@@ -1,7 +1,21 @@
-pub fn compile(_project_dir: &str) {}
+pub mod opcodes;
+pub mod scratch_program;
 
-fn _parser() {}
+use crate::BUILD_DIRECTORY;
+use scratch_program::ScratchProgram;
 
-fn _assembler() {}
+pub fn compile(project_dir: &str) {
+   let program = parser(project_dir);
+   code_generator(&program, project_dir);
+}
 
-fn _linker() {}
+fn parser(project_dir: &str) -> ScratchProgram { 
+    let file = std::fs::read_to_string(BUILD_DIRECTORY.to_owned() + project_dir + "project.json").expect("Error opening project.json.");
+
+
+    ScratchProgram {} 
+}
+
+fn code_generator(program: &ScratchProgram, project_dir: &str) {
+
+}

@@ -32,7 +32,10 @@ pub fn download(project_id: &str) -> Result<(), Box<dyn std::error::Error>> {
     let output: Value = serde_json::from_str(&metadata)?;
 
     fs::create_dir_all(BUILD_DIRECTORY.to_owned() + &project_id + "/meta/")?;
-    fs::write(BUILD_DIRECTORY.to_owned() + &project_id + "/meta/data.json", serde_json::to_string_pretty(&output)?)?;
+    fs::write(
+        BUILD_DIRECTORY.to_owned() + &project_id + "/meta/data.json",
+        serde_json::to_string_pretty(&output)?,
+    )?;
 
     let project_token = output["project_token"]
         .as_str()
@@ -109,12 +112,21 @@ fn handle_json(directory: &str, json: &str) -> Result<(), Box<dyn std::error::Er
 
     let json: Value = serde_json::from_str(json)?;
 
-    let targets = json["targets"].as_array().expect("Error parsing json.").clone();
+    let targets = json["targets"]
+        .as_array()
+        .expect("Error parsing json.")
+        .clone();
     let total_targets = targets.len();
 
     for (target_index, target) in targets.iter().enumerate() {
-        let costumes = target["costumes"].as_array().expect("Error parsing json.").clone();
-        let sounds = target["sounds"].as_array().expect("Error parsing json.").clone();
+        let costumes = target["costumes"]
+            .as_array()
+            .expect("Error parsing json.")
+            .clone();
+        let sounds = target["sounds"]
+            .as_array()
+            .expect("Error parsing json.")
+            .clone();
 
         let assets: Vec<Value> = costumes.into_iter().chain(sounds).collect();
         let total_assets = assets.len();
@@ -125,10 +137,19 @@ fn handle_json(directory: &str, json: &str) -> Result<(), Box<dyn std::error::Er
 
             let md5ext = asset_id.to_owned() + "." + data_format;
 
-            print!("\r--- Fetching {} - asset: {}/{}, target: {}/{}", md5ext, asset_index + 1, total_assets, target_index + 1, total_targets);
+            print!(
+                "\r--- Fetching {} - asset: {}/{}, target: {}/{}",
+                md5ext,
+                asset_index + 1,
+                total_assets,
+                target_index + 1,
+                total_targets
+            );
             std::io::stdout().flush()?;
 
-            let link = "https://assets.scratch.mit.edu/internalapi/asset/".to_owned() + md5ext.as_str() + "/get/";
+            let link = "https://assets.scratch.mit.edu/internalapi/asset/".to_owned()
+                + md5ext.as_str()
+                + "/get/";
 
             let response = reqwest::blocking::get(link.as_str())?;
             match response.status() {
