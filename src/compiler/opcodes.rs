@@ -10,15 +10,21 @@ pub fn string_to_opcode(string: &str) -> Opcode{
 
 #[derive(Debug, Display, PartialEq, EnumString)]
 pub enum MonitorOpcode {
+    // Motion / Blue blocks
     MotionXPosition,
     MotionYPosition,
 
     MotionDirection,
 
 
+    // Looks / Purple blocks
     LooksSize,
     LooksBackDropNumberName,
     LooksCostumeNumberName,
+
+    
+    // Sound / Pink blocks
+    SoundVolume,
 }
 
 
@@ -90,5 +96,23 @@ pub enum BlockOpcode {
     // Oval blocks
     LooksCostumeNumberName,
     LooksBackdropNumberName,
-    LooksSize,    
+    LooksSize,
+
+
+    // Sound / Pink blocks
+    // Rectangle blocks
+    SoundsSoundsMenu,
+    SoundPlayUntilDone,
+    SoundPlay,
+    SoundStopAllSounds,
+
+    SoundChangeEffectBy,
+    SoundSetEffectTo,
+    SoundClearEffects,
+
+    SoundChangeVolumeBy,
+    SoundSetVolumeTo,
+
+    // Oval blocks
+    SoundVolume,
 }
