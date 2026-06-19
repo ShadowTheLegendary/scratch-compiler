@@ -1,7 +1,11 @@
 use strum::EnumString;
 
 pub fn string_to_block_opcode(string: &str) -> BlockOpcode {
-    string.parse().expect("String does not match known opcode.")
+    if let Ok(opcode) = string.parse::<BlockOpcode>() {
+        return opcode;
+    }
+
+    BlockOpcode::None
 }
 
 impl std::fmt::Display for BlockOpcode {
@@ -31,6 +35,8 @@ pub enum MonitorOpcode {
 #[derive(Debug, PartialEq, EnumString)]
 #[strum(serialize_all = "lowercase")]
 pub enum BlockOpcode {
+    // Error code
+    None,
     // Motion / Blue blocks
     // Rectangle blocks
     MotionMoveSteps,
@@ -127,4 +133,23 @@ pub enum BlockOpcode {
     // Rectangle blocks
     EventBroadcast,
     EventBroadcastAndWait,
+
+
+    // Control / Orange blocks
+    ControlWait,
+
+    ControlRepeat,
+    ControlForever,
+
+    ControlIf,
+    ControlIfElse,
+    ControlWaitUntil,
+    ControlRepeatUntil,
+
+    ControlStop,
+
+    ControlStartAsClone,
+    ControlCreateCloneOf,
+    ControlCreateCloneOfMenu,
+    ControlDeleteThisClone,
 }
