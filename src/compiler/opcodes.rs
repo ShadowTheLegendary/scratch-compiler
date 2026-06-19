@@ -1,11 +1,30 @@
 use strum::EnumString;
 
+use serde_json::Value;
+
 pub fn string_to_block_opcode(string: &str) -> BlockOpcode {
     if let Ok(opcode) = string.parse::<BlockOpcode>() {
         return opcode;
     }
 
     BlockOpcode::None
+}
+
+pub fn is_entry_point(opcode: &str) -> bool {
+    if opcode.starts_with("event_when") || (opcode == "control_start_as_clone") {
+        return true;
+    }
+
+    false
+}
+
+pub fn is_flow_control(block: &Value) -> bool {
+    let inputs = block["inputs"].clone();
+    if inputs["SUBSTACK"].is_null() {
+        return false;
+    }
+
+    true
 }
 
 impl std::fmt::Display for BlockOpcode {
@@ -37,6 +56,10 @@ pub enum MonitorOpcode {
 pub enum BlockOpcode {
     // Error code
     None,
+
+
+
+
     // Motion / Blue blocks
     // Rectangle blocks
     MotionMoveSteps,
@@ -71,6 +94,9 @@ pub enum BlockOpcode {
 
     MotionDirection,
 
+
+
+
     // Looks / Purple blocks
     // Rectangle blocks
     LooksSayForSecs,
@@ -104,6 +130,9 @@ pub enum BlockOpcode {
     LooksBackdropNumberName,
     LooksSize,
 
+
+
+
     // Sound / Pink blocks
     // Rectangle blocks
     SoundsSoundsMenu,
@@ -121,6 +150,9 @@ pub enum BlockOpcode {
     // Oval blocks
     SoundVolume,
 
+
+
+
     // Events / Yellow blocks
     // Code entrypoints
     EventWhenFlagClicked,
@@ -133,6 +165,8 @@ pub enum BlockOpcode {
     // Rectangle blocks
     EventBroadcast,
     EventBroadcastAndWait,
+
+
 
 
     // Control / Orange blocks
