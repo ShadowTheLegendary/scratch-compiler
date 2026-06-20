@@ -186,4 +186,69 @@ pub enum BlockOpcode {
     ControlCreateCloneOf,
     ControlCreateCloneOfMenu,
     ControlDeleteThisClone,
+
+
+
+
+    // Sensing / Cyan blocks
+    SensingTouchingObject,
+    SensingTouchingObjectMenu,
+    SensingTouchingColor,
+    SensingColorIsTouchingColor,
+    SensingDistanceTo,
+    SensingDistanceToMenu,
+
+    SensingAskAndWait,
+    SensingAnswer,
+
+    SensingKeyPressed,
+    SensingKeyOptions,
+    SensingMouseDown,
+    SensingMouseX,
+    SensingMouseY,
+
+    SensingSetDragMode,
+
+    SensingLoudness,
+
+    SensingTimer,
+    SensingResetTimer,
+
+    SensingOf,
+    SensingOfObjectMenu,
+
+    SensingCurrent,
+    SensingDaysSince2000,
+
+    SensingOnline,
+    SensingUsername,
+
+
+
+
+    // Operator / Green blocks
+    OperatorAdd,
+    OperatorSubtract,
+    OperatorMultiply,
+    OperatorDivide,
+
+    OperatorRandom,
+
+    OperatorGt,
+    OperatorLt,
+    OperatorEquals,
+
+    OperatorAnd,
+    OperatorOr,
+    OperatorNot,
+
+    OperatorJoin,
+    OperatorLetterOf,
+    OperatorLength,
+    OperatOrContains,
+
+    OperatorMod,
+    OperatorRound,
+
+    OperatorMathOp,
 }

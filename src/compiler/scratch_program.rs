@@ -27,11 +27,12 @@ pub struct Sprite {
 impl Sprite {
     pub fn parse(sprite: &Value) -> Sprite {
         let mut chains: Vec<BlockChain> = Vec::new();
-        let blocks = sprite["blocks"].as_object().unwrap();
+        let blocks = &sprite["blocks"];
+        let blocks_map = sprite["blocks"].as_object().unwrap();
 
-        for (block_id, block) in blocks.iter() {
+        for (block_id, block) in blocks_map.iter() {
             if is_entry_point(block["opcode"].as_str().unwrap()) {
-                chains.push(BlockChain::parse(block_id, block));
+                chains.push(BlockChain::parse(block_id, blocks));
             }
         }
 
